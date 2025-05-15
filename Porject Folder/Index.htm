@@ -2,27 +2,138 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Flashcard Application</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Flashcard App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 40px;
+      background: #f4f4f4;
+    }
+
+    #flashcard {
+      width: 300px;
+      height: 200px;
+      margin: 20px auto;
+      perspective: 1000px;
+      cursor: pointer;
+    }
+
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+    }
+
+    .flipped .card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .card-front, .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      padding: 20px;
+      backface-visibility: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #333;
+      border-radius: 10px;
+      background-color: white;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .card-back {
+      transform: rotateY(180deg);
+      background-color: #e0f7fa;
+    }
+
+    .controls, .rating-buttons, .mark-buttons, .add-card {
+      margin-top: 20px;
+    }
+
+    button {
+      margin: 5px;
+      padding: 10px 15px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    .controls button {
+      background-color: #2196f3;
+      color: white;
+    }
+
+    .rating-buttons button:nth-child(1) { background-color: #4caf50; color: white; }
+    .rating-buttons button:nth-child(2) { background-color: #ff9800; color: white; }
+    .rating-buttons button:nth-child(3) { background-color: #f44336; color: white; }
+
+    .mark-buttons button {
+      background-color: #9c27b0;
+      color: white;
+    }
+
+    .add-card input {
+      padding: 8px;
+      margin: 5px;
+      width: 200px;
+    }
+
+    .add-card button {
+      background-color: #4caf50;
+      color: white;
+    }
+
+    #progress {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
-  <h1>Flashcard Application</h1>
 
-  <div id="deck-container">
-    <button id="add-card-btn">Add Flashcard</button>
-    <button id="next-card-btn">Next Card</button>
+  <h1>Flashcard App</h1>
+
+  <div id="flashcard" onclick="flipCard()">
+    <div class="card-inner">
+      <div class="card-front" id="card-front">Loading...</div>
+      <div class="card-back" id="card-back">Loading...</div>
+    </div>
   </div>
 
-  <div id="flashcard" class="card">
-    <div id="front" class="side">Question</div>
-    <div id="back" class="side hidden">Answer</div>
+  <div class="controls">
+    <button onclick="prevCard()">Previous</button>
+    <button onclick="nextCard()">Next</button>
   </div>
 
-  <div id="status">
-    <button id="mark-known-btn">Mark Known</button>
-    <button id="mark-review-btn">Needs Review</button>
+  <div class="rating-buttons">
+    <button onclick="rateCard('easy')">Easy</button>
+    <button onclick="rateCard('medium')">Medium</button>
+    <button onclick="rateCard('hard')">Hard</button>
   </div>
+
+  <div class="mark-buttons">
+    <button onclick="markKnown()">Mark as Known</button>
+    <button onclick="markReview()">Needs Review</button>
+  </div>
+
+  <div class="add-card">
+    <input type="text" id="new-question" placeholder="Enter question" />
+    <input type="text" id="new-answer" placeholder="Enter answer" />
+    <button onclick="addCard()">Add Card</button>
+  </div>
+
+  <div id="progress">Loading progress...</div>
 
   <script src="script.js"></script>
 </body>

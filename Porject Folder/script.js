@@ -1,48 +1,84 @@
-const flashcards = [
-    { question: "What is spaced repetition?", answer: "A technique to review flashcards at increasing intervals." },
-    { question: "Who created JavaScript?", answer: "Brendan Eich." },
-    { question: "What does HTML stand for?", answer: "HyperText Markup Language." }
+let flashcards = [
+    { question: "What is JavaScript?", answer: "A programming language for the web.", rating: null, known: false },
+    { question: "What does HTML stand for?", answer: "HyperText Markup Language", rating: null, known: false }
 ];
 
 let currentCardIndex = 0;
-const front = document.getElementById("front");
-const back = document.getElementById("back");
-const flashcard = document.getElementById("flashcard");
+
+// Load the first card
+window.onload = () => {
+    showCard(currentCardIndex);
+    updateProgress();
+};
 
 function showCard(index) {
+    const front = document.getElementById("card-front");
+    const back = document.getElementById("card-back");
     const card = flashcards[index];
-    front.textContent = card.question;
-    back.textContent = card.answer;
-    // Reset flip state to show front side
-    flashcard.classList.remove("flipped");
+
+    front.innerText = card.question;
+    back.innerText = card.answer;
+
+    // Remove flipped state
+    document.getElementById("flashcard").classList.remove("flipped");
 }
 
-flashcard.addEventListener("click", () => {
-    flashcard.classList.toggle("flipped");
-});
+function flipCard() {
+    const card = document.getElementById("flashcard");
+    card.classList.toggle("flipped");
+}
 
-document.getElementById("next-card-btn").addEventListener("click", () => {
+function nextCard() {
+    if (flashcards.length === 0) return;
     currentCardIndex = (currentCardIndex + 1) % flashcards.length;
     showCard(currentCardIndex);
-});
+}
 
-document.getElementById("add-card-btn").addEventListener("click", () => {
-    const q = prompt("Enter the question:");
-    const a = prompt("Enter the answer:");
-    if (q && a) {
-        flashcards.push({ question: q, answer: a });
+function prevCard() {
+    if (flashcards.length === 0) return;
+    currentCardIndex = (currentCardIndex - 1 + flashcards.length) % flashcards.length;
+    showCard(currentCardIndex);
+}
+
+function addCard() {
+    const question = document.getElementById("new-question").value.trim();
+    const answer = document.getElementById("new-answer").value.trim();
+
+    if (question && answer) {
+        flashcards.push({ question, answer, rating: null, known: false });
+        document.getElementById("new-question").value = "";
+        document.getElementById("new-answer").value = "";
         currentCardIndex = flashcards.length - 1;
         showCard(currentCardIndex);
+        updateProgress();
+    } else {
+        alert("Please enter both a question and an answer.");
     }
-});
+}
 
-document.getElementById("mark-known-btn").addEventListener("click", () => {
-    alert(`Marked card "${flashcards[currentCardIndex].question}" as known.`);
-});
+function markKnown() {
+    if (flashcards.length === 0) return;
+    flashcards[currentCardIndex].known = true;
+    updateProgress();
+    nextCard();
+}
 
-document.getElementById("mark-review-btn").addEventListener("click", () => {
-    alert(`Marked card "${flashcards[currentCardIndex].question}" as needs review.`);
-});
+function markReview() {
+    if (flashcards.length === 0) return;
+    flashcards[currentCardIndex].known = false;
+    updateProgress();
+    nextCard();
+}
 
-// Show first card on load
-showCard(currentCardIndex);
+function rateCard(difficulty) {
+    if (flashcards.length === 0) return;
+    flashcards[currentCardIndex].rating = difficulty;
+    updateProgress();
+}
+
+function updateProgress() {
+    const knownCount = flashcards.filter(card => card.known).length;
+    const total = flashcards.length;
+    const progressText = `Progress: ${knownCount}/${total} cards known`;
+    document.getElementById("progress").innerText = progressText;
+}
