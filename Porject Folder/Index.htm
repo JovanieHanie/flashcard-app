@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Flashcard Application</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>Flashcard Application</h1>
+
+  <div id="deck-container">
+    <button id="add-card-btn">Add Flashcard</button>
+    <button id="next-card-btn">Next Card</button>
+  </div>
+
+  <div id="flashcard" class="card">
+    <div id="front" class="side">Question</div>
+    <div id="back" class="side hidden">Answer</div>
+  </div>
+
+  <div id="status">
+    <button id="mark-known-btn">Mark Known</button>
+    <button id="mark-review-btn">Needs Review</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
